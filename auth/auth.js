@@ -1,26 +1,36 @@
 const API = "https://red-phantom-auth-back-hh6z.vercel.app/api/users";
 
 async function signup() {
-  if (password.value.length < 8) {
+  const firstName = document.getElementById("firstName").value;
+  const lastName = document.getElementById("lastName").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
+  const age = document.getElementById("age").value;
+  const phone = document.getElementById("phone").value;
+  const role = document.getElementById("role").value;
+  const gender = document.querySelector("input[name='gender']:checked")?.value;
+
+  if (password.length < 8) {
     alert("Password must be at least 8 characters long!");
     return;
   }
 
-  if (password.value !== confirmPassword.value) {
+  if (password !== confirmPassword) {
     alert("Passwords do not match!");
     return;
   }
 
   const data = {
-    firstName: firstName.value,
-    lastName: lastName.value,
-    email: email.value,
-    password: password.value,
-    confirmPassword: confirmPassword.value,
-    age: Number(age.value),
-    phone: phone.value,
-    role: role.value,
-    gender: document.querySelector("input[name='gender']:checked").value,
+    firstName,
+    lastName,
+    email,
+    password,
+    confirmPassword,
+    age: Number(age),
+    phone,
+    role,
+    gender,
   };
 
   try {
@@ -37,7 +47,7 @@ async function signup() {
       return;
     }
 
-    localStorage.setItem("email", data.email);
+    localStorage.setItem("email", email);
     location.href = "verify-email.html";
   } catch (err) {
     alert("Server error");
@@ -46,6 +56,7 @@ async function signup() {
 
 async function verifyEmail() {
   const emailStored = localStorage.getItem("email");
+  const otpValue = document.getElementById("otp").value;
 
   try {
     const res = await fetch(`${API}/verify-email`, {
@@ -53,7 +64,7 @@ async function verifyEmail() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         email: emailStored,
-        otp: otp.value,
+        otp: otpValue,
       }),
     });
 
@@ -72,13 +83,16 @@ async function verifyEmail() {
 }
 
 async function login() {
+  const emailValue = document.getElementById("email").value;
+  const passwordValue = document.getElementById("password").value;
+
   try {
     const res = await fetch(`${API}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        email: email.value,
-        password: password.value,
+        email: emailValue,
+        password: passwordValue,
       }),
     });
 
