@@ -1,4 +1,4 @@
-const API = "https://red-phantom-auth-back-hh6z.vercel.app/api/users";
+const API = "https://red-phantom-auth-back-r6e2.vercel.app/api/users";
 
 async function signup() {
   const firstName = document.getElementById("firstName").value;
