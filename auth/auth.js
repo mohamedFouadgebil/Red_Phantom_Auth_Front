@@ -1,5 +1,9 @@
 const API = "https://red-phantom-auth-back-r6e2.vercel.app/api/users";
 
+document.getElementById("signupBtn")?.addEventListener("click", signup);
+document.getElementById("loginBtn")?.addEventListener("click", login);
+document.getElementById("verifyBtn")?.addEventListener("click", verifyEmail);
+
 async function signup() {
   const firstName = document.getElementById("firstName").value;
   const lastName = document.getElementById("lastName").value;
@@ -11,15 +15,8 @@ async function signup() {
   const role = document.getElementById("role").value;
   const gender = document.querySelector("input[name='gender']:checked")?.value;
 
-  if (password.length < 8) {
-    alert("Password must be at least 8 characters long!");
-    return;
-  }
-
-  if (password !== confirmPassword) {
-    alert("Passwords do not match!");
-    return;
-  }
+  if (password.length < 8) return alert("Password must be at least 8 characters long!");
+  if (password !== confirmPassword) return alert("Passwords do not match!");
 
   const data = {
     firstName,
@@ -42,14 +39,11 @@ async function signup() {
 
     const result = await res.json();
 
-    if (!res.ok) {
-      alert(result.message || "Signup failed");
-      return;
-    }
+    if (!res.ok) return alert(result.message || "Signup failed");
 
     localStorage.setItem("email", email);
     location.href = "verify-email.html";
-  } catch (err) {
+  } catch {
     alert("Server error");
   }
 }
@@ -70,14 +64,11 @@ async function verifyEmail() {
 
     const result = await res.json();
 
-    if (!res.ok) {
-      alert(result.message || "Invalid OTP");
-      return;
-    }
+    if (!res.ok) return alert(result.message || "Invalid OTP");
 
     localStorage.removeItem("email");
     location.href = "login.html";
-  } catch (err) {
+  } catch {
     alert("Server error");
   }
 }
@@ -98,14 +89,11 @@ async function login() {
 
     const data = await res.json();
 
-    if (!res.ok) {
-      alert(data.message || "Login failed");
-      return;
-    }
+    if (!res.ok) return alert(data.message || "Login failed");
 
     localStorage.setItem("token", data.token);
     location.href = "https://red-phantom-main.vercel.app/";
-  } catch (err) {
+  } catch {
     alert("Server error");
   }
 }
